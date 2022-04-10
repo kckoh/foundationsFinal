@@ -4,9 +4,30 @@ import './App.css'
 import 'survey-react/modern.min.css';
 import { Survey, StylesManager, Model } from 'survey-react';
 
+var gResults;
+function GoodCalculator(props){
+  let results = 0
+  for (var prop in props) {
+    if (Object.prototype.hasOwnProperty.call(props, prop)) {
+      console.log(typeof props[prop] )
+        if ( typeof props[prop] === "boolean"){
+          results += 10;
+          continue;
+        }
+        results += props[prop]
+        console.log (props[prop])
+    }
+    
+}
+  console.log(results)
+  gResults = results;
+  return (results)
+  
+  
+}
 StylesManager.applyTheme("modern");
 
-const surveyJson = {
+var surveyJson = {
   pages: [{
     elements: [{
       type: "html",
@@ -24,78 +45,78 @@ const surveyJson = {
     }
 ]},
 
-{
-  elements: [
-  {
-      "type": "boolean",
-      "name": "relationshipLoved",
-      "title": "Relationshiop",
-      "label": "Do you have a person you love?",
-      "isRequired": true
-  },
-  {
-    "type": "boolean",
-    "name": "relationshipFriend",
-    "title": "Relationshiop",
-    "label": "Do you have a friend you can rely on?",
-    "isRequired": true
-}
-]},
+// {
+//   elements: [
+//   {
+//       "type": "boolean",
+//       "name": "relationshipLoved",
+//       "title": "Relationshiop",
+//       "label": "Do you have a person you love?",
+//       "isRequired": true
+//   },
+//   {
+//     "type": "boolean",
+//     "name": "relationshipFriend",
+//     "title": "Relationshiop",
+//     "label": "Do you have a friend you can rely on?",
+//     "isRequired": true
+// }
+// ]},
 
-{
-  elements: [
-  {
-      "type": "boolean",
-      "name": "wealth",
-      "title": "Wealth",
-      "label": "Can we find happiness in wealth?",
-      "isRequired": true
-  },
+// {
+//   elements: [
+//   {
+//       "type": "boolean",
+//       "name": "wealth",
+//       "title": "Wealth",
+//       "label": "Can we find happiness in wealth?",
+//       "isRequired": true
+//   },
   
-]},
-{
-  elements: [
-  {
-      "type": "boolean",
-      "name": "ability",
-      "title": "Ability",
-      "label": "Do you have the ability to change the world?",
-      "isRequired": true
-  },
+// ]},
+// {
+//   elements: [
+//   {
+//       "type": "boolean",
+//       "name": "ability",
+//       "title": "Ability",
+//       "label": "Do you have the ability to change the world?",
+//       "isRequired": true
+//   },
   
-]},
-{
-  elements: [
-  {
-      "type": "boolean",
-      "name": "hospitality",
-      "title": "Hospitality",
-      "label": "Are you friendly towards strangers?",
-      "isRequired": true
-  },
+// ]},
+// {
+//   elements: [
+//   {
+//       "type": "boolean",
+//       "name": "hospitality",
+//       "title": "Hospitality",
+//       "label": "Are you friendly towards strangers?",
+//       "isRequired": true
+//   },
   
-]},{
-  elements: [
-  {
-      "type": "boolean",
-      "name": "peace",
-      "title": "Peace",
-      "label": "Do you have a trauma?",
-      "isRequired": true
-  },
+// ]},{
+//   elements: [
+//   {
+//       "type": "boolean",
+//       "name": "peace",
+//       "title": "Peace",
+//       "label": "Do you have a trauma?",
+//       "isRequired": true
+//   },
   
-]},
-{
-  elements: [
-  {
-      "type": "boolean",
-      "name": "ability",
-      "title": "Ability",
-      "label": "Do you have a power to control someone?",
-      "isRequired": true
-  },
+// ]},
+// {
+//   elements: [
+//   {
+//       "type": "boolean",
+//       "name": "ability",
+//       "title": "Ability",
+//       "label": "Do you have a power to control someone?",
+//       "isRequired": true
+//   },
   
-]},
+// ]},
 {
   elements: [
     {
@@ -108,17 +129,17 @@ const surveyJson = {
   
 ]},
 
-{
-  elements: [
-    {
-      name: "Freedom",
-      title: "On a scale of zero to ten, how likely do you feel you are freed?",
-      type: "rating",
-      rateMin: 0,
-      rateMax: 10,
-    }
+// {
+//   elements: [
+//     {
+//       name: "Freedom",
+//       title: "On a scale of zero to ten, how likely do you feel you are freed?",
+//       type: "rating",
+//       rateMin: 0,
+//       rateMax: 10,
+//     }
   
-]},
+// ]},
 
 
   //  {
@@ -174,35 +195,30 @@ const surveyJson = {
   showPrevButton: false,
   firstPageIsStarted: true,
   startSurveyText: "Take the Survey",
-  completedHtml: "Thank you for your feedback!",
+  completedHtml: "Your good life Score is ...",
   showPreviewBeforeComplete: "showAnsweredQuestions"
 };
 
 function App() {
   // useRef enables the Model object to persist between state changes
-  const survey = useRef(new Model(surveyJson)).current;
+  var survey = useRef(new Model(surveyJson)).current;
   const [surveyResults, setSurveyResults] = useState("");
+  const [goodScore, setGoodScore] = useState("")
   const [isSurveyCompleted, setIsSurveyCompleted] = useState(false);
 
   const displayResults = useCallback((sender) => {
-    setSurveyResults(JSON.stringify(sender.data, null, 4));
+    console.log(sender.data)
+    setGoodScore(GoodCalculator(sender.data))
+    
     setIsSurveyCompleted(true);
   }, []);
 
+  
   survey.onComplete.add(displayResults);
-
+  survey.completedHtml = "your good life score is " + goodScore;
   return (
     <>
       <Survey model={survey} id="surveyContainer" />
-      {isSurveyCompleted && (
-        <>
-          <p>Result JSON:</p>
-          <code style={{ whiteSpace: 'pre' }}>
-            {surveyResults}
-          </code>
-        </>
-        )
-      }
     </>
   );
 }
