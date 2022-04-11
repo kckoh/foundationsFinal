@@ -12,13 +12,21 @@ function GoodCalculator(props){
       console.log(typeof props[prop] )
         if ( props[prop] == true){
           if(prop === "peace"){
+
               continue;
           }
+          else {
+            results += 10;
+            console.log(prop, results)
+          }
+          
+          continue;
+        }
+        if(prop === "peace"){
           results += 10;
           console.log(prop, results)
           continue;
         }
-
         results += props[prop]
         console.log(prop, results)
         
